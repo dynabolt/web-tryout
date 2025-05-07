@@ -1,0 +1,1331 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplikasi Ujian Online</title>
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --success-color: #4cc9f0;
+            --danger-color: #f72585;
+            --warning-color: #f9c74f;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fb;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Welcome Screen */
+        .welcome-container {
+            text-align: center;
+            padding: 50px 20px;
+            max-width: 700px;
+            margin: 0 auto;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .welcome-container h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: var(--dark-color);
+        }
+
+        .welcome-container p {
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            color: #6c757d;
+            line-height: 1.6;
+        }
+
+        .start-button {
+            padding: 15px 35px;
+            font-size: 1.2rem;
+            animation: pulse 2s infinite;
+        }
+
+        /* Exam Styles */
+        .exam-header {
+            background-color: white;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .timer-container {
+            display: flex;
+            align-items: center;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        .timer-icon {
+            margin-right: 10px;
+            color: var(--danger-color);
+        }
+
+        .progress-container {
+            width: 100%;
+            max-width: 800px;
+            margin: 30px auto;
+            height: 8px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: var(--primary-color);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .question-container {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            padding: 30px;
+            margin-bottom: 30px;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .question-number {
+            font-size: 0.9rem;
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .question-text {
+            font-size: 1.2rem;
+            margin-bottom: 25px;
+            line-height: 1.5;
+            color: var(--dark-color);
+            white-space: pre-line;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-item {
+            background-color: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+        }
+
+        .option-item:hover {
+            border-color: var(--primary-color);
+            background-color: #eef2ff;
+        }
+
+        .option-item.selected {
+            border-color: var(--primary-color);
+            background-color: #eef2ff;
+        }
+
+        .option-letter {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 30px;
+            height: 30px;
+            background-color: var(--light-color);
+            border-radius: 50%;
+            margin-right: 15px;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        .option-text {
+            flex: 1;
+        }
+
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        /* Result Styles */
+        .result-container {
+            text-align: center;
+            padding: 50px 20px;
+            max-width: 700px;
+            margin: 0 auto;
+            animation: zoomIn 0.5s ease-in;
+        }
+
+        .result-header {
+            margin-bottom: 40px;
+        }
+
+        .result-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: var(--dark-color);
+        }
+
+        .result-header p {
+            font-size: 1.1rem;
+            color: #6c757d;
+        }
+
+        .score-container {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            margin-bottom: 40px;
+        }
+
+        .score-value {
+            font-size: 4rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            line-height: 1;
+        }
+
+        .score-label {
+            font-size: 1.2rem;
+            color: #6c757d;
+        }
+
+        .result-details {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .detail-item {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            min-width: 150px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .detail-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .correct .detail-value {
+            color: #2ecc71;
+        }
+
+        .incorrect .detail-value {
+            color: #e74c3c;
+        }
+
+        .detail-label {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+
+        /* Untuk menampilkan penjelasan soal */
+        .explanation-container {
+            background-color: #f1f9ff;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .explanation-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--primary-color);
+        }
+
+        .explanation-text {
+            color: #555;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes zoomIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(67, 97, 238, 0.7);
+            }
+            70% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 10px rgba(67, 97, 238, 0);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(67, 97, 238, 0);
+            }
+        }
+
+        /* Responsive Styles */
+        @media screen and (max-width: 768px) {
+            .welcome-container h1 {
+                font-size: 2rem;
+            }
+
+            .question-text {
+                font-size: 1.1rem;
+            }
+
+            .option-item {
+                padding: 12px;
+            }
+
+            .option-letter {
+                width: 25px;
+                height: 25px;
+                font-size: 0.9rem;
+            }
+
+            .score-value {
+                font-size: 3rem;
+            }
+
+            .detail-item {
+                min-width: 120px;
+            }
+
+            .detail-value {
+                font-size: 1.5rem;
+            }
+
+            .navigation-buttons {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .navigation-buttons .btn {
+                width: 100%;
+            }
+        }
+
+        /* Screens */
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        /* Loading Animation */
+        .loading-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+
+        .loading-container.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Toast Notification */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .toast {
+            background-color: white;
+            border-left: 4px solid var(--primary-color);
+            border-radius: 4px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 15px 20px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            animation: slideInRight 0.3s forwards;
+            max-width: 350px;
+        }
+
+        .toast.error {
+            border-left-color: var(--danger-color);
+        }
+
+        .toast.success {
+            border-left-color: var(--success-color);
+        }
+
+        .toast-icon {
+            margin-right: 15px;
+            font-size: 1.2rem;
+        }
+
+        .toast-message {
+            flex: 1;
+            font-size: 0.9rem;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Navigation Dots */
+        .navigation-dots {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 8px;
+            flex-wrap: wrap;
+            padding: 0 20px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #e9ecef;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .dot.active {
+            background-color: var(--primary-color);
+            transform: scale(1.2);
+        }
+
+        .dot.answered {
+            background-color: var(--success-color);
+        }
+
+        /* Review feature */
+        .review-container {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .review-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--dark-color);
+            text-align: center;
+        }
+
+        .review-item {
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid #ddd;
+        }
+
+        .review-item.correct {
+            border-left-color: #2ecc71;
+        }
+
+        .review-item.incorrect {
+            border-left-color: #e74c3c;
+        }
+
+        .review-question {
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .review-answer {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .review-user-answer, .review-correct-answer {
+            flex: 1;
+        }
+
+        .review-user-answer span, .review-correct-answer span {
+            font-weight: 600;
+        }
+
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        .blink {
+            animation: blink 1s infinite;
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Spinner -->
+    <div class="loading-container">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Welcome Screen -->
+    <div class="screen active" id="welcomeScreen">
+        <div class="welcome-container">
+            <h1>Selamat datang di Aplikasi Ujian Online</h1>
+            <p>Anda akan mengerjakan soal pilihan ganda dengan waktu 125 menit. Pastikan Anda berada di tempat yang tenang dan koneksi internet stabil.</p>
+            <button id="startExamBtn" class="btn btn-primary start-button">Mulai Ujian</button>
+        </div>
+    </div>
+
+    <!-- Exam Screen -->
+    <div class="screen" id="examScreen">
+        <div class="exam-header">
+            <div class="timer-container">
+                <span class="timer-icon">⏱</span>
+                <span id="timerDisplay">125:00</span>
+            </div>
+            <div>
+                <span id="progressText">Soal 1 dari 25</span>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar" style="width: 1%;"></div>
+            </div>
+
+            <div class="question-container" id="questionContainer">
+                <!-- Question will be inserted here -->
+            </div>
+
+            <div class="navigation-buttons">
+                <button class="btn btn-primary" id="prevBtn" disabled>Sebelumnya</button>
+                <button class="btn btn-primary" id="nextBtn">Selanjutnya</button>
+            </div>
+
+            <div class="navigation-dots" id="navigationDots">
+                <!-- Dots will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Result Screen -->
+    <div class="screen" id="resultScreen">
+        <div class="result-container">
+            <div class="result-header">
+                <h1>Hasil Ujian</h1>
+                <p>Berikut adalah hasil ujian Anda</p>
+            </div>
+
+            <div class="score-container">
+                <div class="score-value" id="scoreValue">0</div>
+                <div class="score-label">Nilai Anda</div>
+            </div>
+
+            <div class="result-details">
+                <div class="detail-item correct">
+                    <div class="detail-value" id="correctAnswers">0</div>
+                    <div class="detail-label">Jawaban Benar</div>
+                </div>
+                <div class="detail-item incorrect">
+                    <div class="detail-value" id="incorrectAnswers">0</div>
+                    <div class="detail-label">Jawaban Salah</div>
+                </div>
+            </div>
+
+            <button class="btn btn-primary" id="reviewBtn">Lihat Review</button>
+            <button class="btn btn-primary" id="restartBtn" style="margin-top: 15px;">Mulai Ujian Baru</button>
+        </div>
+        
+        <div class="review-container" id="reviewContainer" style="display: none;">
+            <h2 class="review-title">Review Jawaban</h2>
+            <div id="reviewContent"></div>
+        </div>
+    </div>
+    <script>
+        // Data structure for questions
+        let questions = [];
+
+        // Soal PPPK Administrasi Perkantoran dari PDF
+        const adminQuestions = [
+            {
+                id: 1,
+                text: "Apa maksudnya dengan manajemen perkantoran?",
+                options: [
+                    { letter: 'A', text: "Pengelolaan anggaran perusahaan" },
+                    { letter: 'B', text: "Pengaturan dokumen dan arsip" },
+                    { letter: 'C', text: "Perencanaan dan pengorganisasian tugas administratif" },
+                    { letter: 'D', text: "Pembuatan laporan keuangan" },
+                    { letter: 'E', text: "Penanganan keluhan pelanggan" }
+                ],
+                correctAnswer: 'C',
+                explanation: "Manajemen perkantoran mencakup perencanaan, pengorganisasian, dan pengelolaan berbagai tugas administratif untuk mendukung kelancaran operasional kantor."
+            },
+            {
+                id: 2,
+                text: "Dalam perencanaan administrasi, langkah pertama yang harus dilakukan adalah?",
+                options: [
+                    { letter: 'A', text: "Menyusun jadwal rapat" },
+                    { letter: 'B', text: "Mengidentifikasi kebutuhan sumber daya" },
+                    { letter: 'C', text: "Menyusun anggaran tahunan" },
+                    { letter: 'D', text: "Menganalisis hasil kerja" },
+                    { letter: 'E', text: "Mengatur inventaris kantor" }
+                ],
+                correctAnswer: 'B',
+                explanation: "Langkah pertama dalam perencanaan adalah mengidentifikasi kebutuhan sumber daya yang diperlukan untuk melaksanakan tugas-tugas administratif secara efektif."
+            },
+            {
+                id: 3,
+                text: "Pengawasan dalam manajemen perkantoran bertujuan untuk?",
+                options: [
+                    { letter: 'A', text: "Meningkatkan profitabilitas perusahaan" },
+                    { letter: 'B', text: "Mengubah standar kualitas pekerjaan terpenuhi" },
+                    { letter: 'C', text: "Mengurangi biaya operasional" },
+                    { letter: 'D', text: "Mempercepat proses pengadaan barang" },
+                    { letter: 'E', text: "Meningkatkan kepuasan pelanggan" }
+                ],
+                correctAnswer: 'B',
+                explanation: "Pengawasan bertujuan untuk memastikan bahwa pekerjaan dilakukan sesuai dengan standar kualitas yang telah ditetapkan."
+            },
+            {
+                id: 4,
+                text: "Untuk meningkatkan efisiensi kerja di kantor, salah satu tindakan yang dapat diambil adalah...",
+                options: [
+                    { letter: 'A', text: "Menambah jumlah karyawan" },
+                    { letter: 'B', text: "Mengurangi waktu istirahat" },
+                    { letter: 'C', text: "Mengimplementasikan teknologi baru" },
+                    { letter: 'D', text: "Mengubah Struktur Organisasi" },
+                    { letter: 'E', text: "Mengurangi anggaran operasional" }
+                ],
+                correctAnswer: 'C',
+                explanation: "Teknologi baru dapat membantu meningkatkan efisiensi kerja dengan mengotomatisasi proses dan mempercepat pekerjaan."
+            },
+            {
+                id: 5,
+                text: "Apa yang merupakan elemen penting dalam manajemen arsip perkantoran?",
+                options: [
+                    { letter: 'A', text: "Pengelolaan Kas Kecil" },
+                    { letter: 'B', text: "Pengaturan jadwal rapat" },
+                    { letter: 'C', text: "Sistem pengarsapan yang terstruktur" },
+                    { letter: 'D', text: "Pengelolaan pengadaan barang" },
+                    { letter: 'E', text: "Penanganan keluhan pelanggan" }
+                ],
+                correctAnswer: 'C',
+                explanation: "Sistem pengarsipan yang terstruktur adalah elemen penting dalam arsip manajemen untuk memastikan dokumen mudah ditemukan dan aman."
+            },
+            {
+                id: 6,
+                text: "Dalam pengorganisasian kantor, penugasan tugas harus dilakukan berdasarkan?",
+                options: [
+                    { letter: 'A', text: "Kesukaan pribadi" },
+                    { letter: 'B', text: "Ketersediaan waktu karyawan" },
+                    { letter: 'C', text: "Kualifikasi dan kemampuan masing-masing karyawan" },
+                    { letter: 'D', text: "Jumlah gaji yang diterima" },
+                    { letter: 'E', text: "Lokasi geografis karyawan" }
+                ],
+                correctAnswer: 'C',
+                explanation: "Tugas harus ditugaskan berdasarkan kualifikasi dan kemampuan karyawan untuk memastikan hasil kerja yang optimal."
+            },
+            {
+                id: 7,
+                text: "Salah satu metode pengendalian untuk memastikan administrasi proyek berjalan sesuai rencana adalah...",
+                options: [
+                    { letter: 'A', text: "Menyusun anggaran biaya" },
+                    { letter: 'B', text: "Mengadakan rapat evaluasi secara berkala" },
+                    { letter: 'C', text: "Mengurangi jam kerja karyawan" },
+                    { letter: 'D', text: "Menambah fasilitas kantor" },
+                    { letter: 'E', text: "Menyederhanakan prosedur pengadaan" }
+                ],
+                correctAnswer: 'B',
+                explanation: "Rapat evaluasi secara berkala membantu dalam mengawasi perkembangan proyek dan melakukan penyesuaian jika diperlukan."
+            },
+            {
+                id: 8,
+                text: "Untuk menilai efektivitas kerja, manajer kantor perlu?",
+                options: [
+                    { letter: 'A', text: "Menghitung jumlah selai lembur" },
+                    { letter: 'B', text: "Menganalisis hasil kerja terhadap tujuan yang telah ditetapkan" },
+                    { letter: 'C', text: "Mengurangi biaya pelatihan" },
+                    { letter: 'D', text: "Meningkatkan anggaran pemasaran" },
+                    { letter: 'E', text: "Mengubah Struktur Organisasi" }
+                ],
+                correctAnswer: 'B',
+                explanation: "Menilai efektivitas kerja yang melibatkan membandingkan hasil kerja dengan tujuan yang telah ditetapkan untuk memastikan tercapainya hasil yang diinginkan."
+            },
+            {
+                id: 9,
+                text: "Apa manfaat utama dari pengelolaan inventaris kantor yang efektif?",
+                options: [
+                    { letter: 'A', text: "Mengurangi beban kerja karyawan" },
+                    { letter: 'B', text: "Menghindari kekurangan atau kelebihan persediaan" },
+                    { letter: 'C', text: "Meningkatkan kepuasan pelanggan" },
+                    { letter: 'D', text: "Mengurangi biaya pelatihan" },
+                    { letter: 'E', text: "Mempercepat proses penggajian" }
+                ],
+                correctAnswer: 'B',
+                explanation: "Pengelolaan inventarisasi yang efektif menjamin bahwa persediaan selalu memadai tanpa ada kekurangan atau kelebihan yang dapat mempengaruhi operasional."
+            },
+            {
+                id: 10,
+                text: "Untuk melakukan pengendalian kualitas dalam administrasi pekerjaan, langkah pertama yang perlu dilakukan adalah...",
+                options: [
+                    { letter: 'A', text: "Membuat laporan akhir" },
+                    { letter: 'B', text: "Menetapkan standar kualitas" },
+                    { letter: 'C', text: "Melakukan pelatihan karyawan" },
+                    { letter: 'D', text: "Mengatur ulang jadwal kerja" },
+                    { letter: 'E', text: "Menyusun anggaran baru" }
+                ],
+                correctAnswer: 'B',
+                explanation: "Menetapkan standar kualitas adalah langkah awal untuk memastikan bahwa pekerjaan memenuhi kriteria yang diharapkan dan memberikan dasar untuk pengendalian kualitas."
+            }
+        ];
+        
+        // Soal TIU (Tes Intelegensi Umum) dari PDF
+        const tiuQuestions = [
+            {
+                id: 11,
+                text: "Jika setiap buku adalah sumber pengetahuan dan setiap sumber pengetahuan dapat memperluas wawasan, maka dapat disimpulkan bahwa:",
+                options: [
+                    { letter: 'A', text: "Semua buku dapat memperluas wawasan." },
+                    { letter: 'B', text: "Beberapa buku tidak memperluas wawasan." },
+                    { letter: 'C', text: "Buku tidak selalu dapat memperluas wawasan." },
+                    { letter: 'D', text: "Semua buku adalah sumber pengetahuan." }
+                ],
+                correctAnswer: 'A',
+                explanation: "Jika semua buku adalah sumber pengetahuan dan setiap sumber pengetahuan dapat memperluas wawasan, maka dapat disimpulkan bahwa semua buku juga dapat memperluas wawasan."
+            },
+            {
+                id: 12,
+                text: "Pernyataan berikut adalah sebuah silogisme:\n• Semua mahasiswa adalah pelajar.\n• Semua pelajar harus mengikuti ujian.\n• Maka, semua mahasiswa harus mengikuti ujian.\nApakah kesimpulan ini sah secara logis?",
+                options: [
+                    { letter: 'A', text: "Ya, karena premis pertama dan kedua mendukung kesimpulan." },
+                    { letter: 'B', text: "Tidak, karena premis kedua tidak berlaku untuk semua pelajar." },
+                    { letter: 'C', text: "Ya, karena semua mahasiswa pasti pelajar." },
+                    { letter: 'D', text: "Tidak, karena ada pengecualian bagi mahasiswa." }
+                ],
+                correctAnswer: 'A',
+                explanation: "Kesimpulan ini sah secara logis karena premis pertama menyatakan bahwa semua mahasiswa adalah pelajar, dan premis kedua menyatakan bahwa semua pelajar harus mengikuti ujian, sehingga kesimpulan bahwa semua mahasiswa harus mengikuti ujian adalah benar."
+            },
+            {
+                id: 13,
+                text: "Jika mobil adalah kendaraan yang menggunakan mesin untuk berjalan, maka sepeda adalah kendaraan yang:",
+                options: [
+                    { letter: 'A', text: "Memerlukan bahan bakar untuk berjalan." },
+                    { letter: 'B', text: "Digerakkan dengan menggunakan mesin." },
+                    { letter: 'C', text: "Digerakkan dengan tenaga manusia." },
+                    { letter: 'D', text: "Tidak memerlukan tenaga untuk berjalan." }
+                ],
+                correctAnswer: 'C',
+                explanation: "Dalam analogi ini, mobil digerakkan dengan mesin, sedangkan sepeda digerakkan dengan tenaga manusia (berbeda dalam cara penggerakannya)."
+            },
+            {
+                id: 14,
+                text: "Semua ibu rumah tangga harus mengelola rumah tangga dengan baik.\nSari adalah ibu rumah tangga.\nMaka, Sari harus mengelola rumah tangga dengan baik.\nApakah kesimpulan ini benar?",
+                options: [
+                    { letter: 'A', text: "Ya, karena semua ibu rumah tangga harus mengelola rumah tangga dengan baik." },
+                    { letter: 'B', text: "Tidak, karena tidak semua ibu rumah tangga mengelola rumah tangga dengan baik." },
+                    { letter: 'C', text: "Ya, karena premis kedua mendukung kesimpulan." },
+                    { letter: 'D', text: "Tidak, karena premis pertama salah." }
+                ],
+                correctAnswer: 'A',
+                explanation: "Kesimpulan ini sah karena premis pertama mengungkapkan bahwa semua ibu rumah tangga harus mengelola rumah tangga dengan baik, dan premis kedua menyatakan bahwa Sari adalah ibu rumah tangga, sehingga Sari harus mengelola rumah tangga dengan baik."
+            },
+            {
+                id: 15,
+                text: "Jika hujan adalah penyebab tanah menjadi basah, maka terik matahari adalah penyebab tanah menjadi:",
+                options: [
+                    { letter: 'A', text: "Kering." },
+                    { letter: 'B', text: "Lembab." },
+                    { letter: 'C', text: "Subur." },
+                    { letter: 'D', text: "Tergenang air." }
+                ],
+                correctAnswer: 'A',
+                explanation: "Hujan menyebabkan tanah menjadi basah, sedangkan terik matahari menyebabkan tanah menjadi kering, ini adalah hubungan sebab-akibat."
+            },
+            {
+                id: 16,
+                text: "Nilai dari √(5² 5³ 5⁵) adalah ...",
+                options: [
+                    { letter: 'A', text: "5/5" },
+                    { letter: 'B', text: "25/5" },
+                    { letter: 'C', text: "50/5" },
+                    { letter: 'D', text: "100/5" },
+                    { letter: 'E', text: "125/5" }
+                ],
+                correctAnswer: 'B',
+                explanation: "Bilangan berpangkat akar\n√(5² 5³ 5⁵)=√(5²⁺³⁺⁵)=√(5¹⁰)=5¹⁰/²=5⁵=25×5=25/5."
+            },
+            {
+                id: 17,
+                text: "Nilai dari 33⅓ % × 0,15 adalah...",
+                options: [
+                    { letter: 'A', text: "5%" },
+                    { letter: 'B', text: "½" },
+                    { letter: 'C', text: "⅓₀" },
+                    { letter: 'D', text: "25%" },
+                    { letter: 'E', text: "0,5" }
+                ],
+                correctAnswer: 'A',
+                explanation: "Persentase\nIngat: 33⅓ % = ⅓\nMaka: 33⅓ % × 0,15\n= ⅓ × 15/100\n= 5/100 atau 5%."
+            },
+            {
+                id: 18,
+                text: "Jika harga 4 buku harganya Rp 120.000, berapa harga 10 buku yang sama?",
+                options: [
+                    { letter: 'A', text: "Rp 300.000" },
+                    { letter: 'B', text: "Rp 320.000" },
+                    { letter: 'C', text: "Rp 350.000" },
+                    { letter: 'D', text: "Rp 400.000" }
+                ],
+                correctAnswer: 'A',
+                explanation: "Harga per buku adalah 120.000 / 4 = 30.000 per buku.\nUntuk 10 buku, harga = 30.000 × 10 = 300.000."
+            },
+            {
+                id: 19,
+                text: "Hasil dari (0,5 × 5²) + (2 × ¼ × 25%) adalah...",
+                options: [
+                    { letter: 'A', text: "19,255" },
+                    { letter: 'B', text: "17,725" },
+                    { letter: 'C', text: "16,625" },
+                    { letter: 'D', text: "12,625" },
+                    { letter: 'E', text: "6,265" }
+                ],
+                correctAnswer: 'D',
+                explanation: "Bilangan pecahan\n= (0,5 × 5²) + (2 × ¼ × 25%)\n= (½ × 25) + (2 × ¼ × ¼)\n= 25/2 × 2/16\n= 200/16 + 2/16\n= 202/16\n= 12,625."
+            },
+            {
+                id: 20,
+                text: "Jika 7 kg wortel harganya Rp 56.000, berapa harga 14 kg wortel yang sama?",
+                options: [
+                    { letter: 'A', text: "Rp 112.000" },
+                    { letter: 'B', text: "Rp 120.000" },
+                    { letter: 'C', text: "Rp 124.000" },
+                    { letter: 'D', text: "Rp 128.000" }
+                ],
+                correctAnswer: 'A',
+                explanation: "Harga wortel berbanding senilai dengan jumlah kilogram. Harga per kg adalah 56.000 / 7 = 8.000 per kg. Untuk 14 kg, harga = 8.000 × 14 = 112.000."
+            },
+            {
+                id: 21,
+                text: "Suatu seri angka sebagai berikut: 2, 4, 7, 11, 16, …, seri selanjutnya adalah ….",
+                options: [
+                    { letter: 'A', text: "17, 18" },
+                    { letter: 'B', text: "20, 22" },
+                    { letter: 'C', text: "22, 29" },
+                    { letter: 'D', text: "24, 32" },
+                    { letter: 'E', text: "29, 35" }
+                ],
+                correctAnswer: 'C',
+                explanation: "2 (+2) 4 (+3) 7 (+4) 11 (+5) 16 (+6) 22 (+7) 29"
+            },
+            {
+                id: 22,
+                text: "Suatu seri angka sebagai berikut: 72, 69, 56, 60, …., seri selanjutnya adalah ….",
+                options: [
+                    { letter: 'A', text: "74, 54" },
+                    { letter: 'B', text: "54, 47" },
+                    { letter: 'C', text: "47, 29" },
+                    { letter: 'D', text: "22, 15" },
+                    { letter: 'E', text: "18, 12" }
+                ],
+                correctAnswer: 'B',
+                explanation: "72 (-3) 69 (-4) 65 (-5) 60 (-6) 54 (-7) 47"
+            },
+            {
+                id: 23,
+                text: "Suatu seri angka sebagai berikut: 5, 7, 11, 19, 35, …., seri selanjutnya adalah ….",
+                options: [
+                    { letter: 'A', text: "67, 131" },
+                    { letter: 'B', text: "45, 120" },
+                    { letter: 'C', text: "42, 110" },
+                    { letter: 'D', text: "40, 100" },
+                    { letter: 'E', text: "38, 95" }
+                ],
+                correctAnswer: 'A',
+                explanation: "5 (+2) 7 (+4) 11 (+8) 19 (+16) 35 (+32) 67 (+64) 131"
+            },
+            {
+                id: 24,
+                text: "Suatu seri angka sebagai berikut: 1, 3, 7, 13, 21, …., seri selanjutnya adalah ….",
+                options: [
+                    { letter: 'A', text: "25" },
+                    { letter: 'B', text: "28" },
+                    { letter: 'C', text: "31" },
+                    { letter: 'D', text: "35" },
+                    { letter: 'E', text: "45" }
+                ],
+                correctAnswer: 'C',
+                explanation: "1 (+2) 3 (+4) 7 (+6) 13 (+8) 21 (+10) 31 (+12) 43"
+            },
+            {
+                id: 25,
+                text: "Jika api adalah sumber panas, maka es adalah sumber:",
+                options: [
+                    { letter: 'A', text: "Dingin." },
+                    { letter: 'B', text: "Panas." },
+                    { letter: 'C', text: "Terang." },
+                    { letter: 'D', text: "Gelap." }
+                ],
+                correctAnswer: 'A',
+                explanation: "Dalam analogi ini, api adalah sumber panas, sedangkan es adalah sumber dingin, sehingga hubungan tersebut tepat."
+            }
+        ];
+        
+        // Menggabungkan seluruh soal
+        questions = [...adminQuestions, ...tiuQuestions];
+        
+        // Exam state
+        let currentQuestionIndex = 0;
+        let userAnswers = Array(questions.length).fill(null);
+        let timerInterval;
+        let remainingTime = 125 * 60; // 125 minutes in seconds
+
+        // DOM elements
+        const screens = {
+            welcome: document.getElementById('welcomeScreen'),
+            exam: document.getElementById('examScreen'),
+            result: document.getElementById('resultScreen')
+        };
+
+        const elements = {
+            startExamBtn: document.getElementById('startExamBtn'),
+            questionContainer: document.getElementById('questionContainer'),
+            prevBtn: document.getElementById('prevBtn'),
+            nextBtn: document.getElementById('nextBtn'),
+            timerDisplay: document.getElementById('timerDisplay'),
+            progressBar: document.getElementById('progressBar'),
+            progressText: document.getElementById('progressText'),
+            navigationDots: document.getElementById('navigationDots'),
+            scoreValue: document.getElementById('scoreValue'),
+            correctAnswers: document.getElementById('correctAnswers'),
+            incorrectAnswers: document.getElementById('incorrectAnswers'),
+            reviewBtn: document.getElementById('reviewBtn'),
+            reviewContainer: document.getElementById('reviewContainer'),
+            reviewContent: document.getElementById('reviewContent'),
+            restartBtn: document.getElementById('restartBtn'),
+            loadingContainer: document.querySelector('.loading-container'),
+            toastContainer: document.getElementById('toastContainer')
+        };
+
+        // Event listeners
+        elements.startExamBtn.addEventListener('click', () => {
+            startExam();
+        });
+
+        elements.prevBtn.addEventListener('click', () => {
+            navigateQuestion(-1);
+        });
+
+        elements.nextBtn.addEventListener('click', () => {
+            navigateQuestion(1);
+        });
+        
+        elements.reviewBtn.addEventListener('click', () => {
+            toggleReview();
+        });
+
+        elements.restartBtn.addEventListener('click', () => {
+            resetExam();
+            showScreen('welcome');
+        });
+
+        // Functions
+        function showScreen(screenId) {
+            Object.values(screens).forEach(screen => {
+                screen.classList.remove('active');
+            });
+            screens[screenId].classList.add('active');
+        }
+
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `
+                <div class="toast-icon">${type === 'error' ? '❌' : '✅'}</div>
+                <div class="toast-message">${message}</div>
+            `;
+            elements.toastContainer.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => {
+                    elements.toastContainer.removeChild(toast);
+                }, 300);
+            }, 3000);
+        }
+
+        function showLoading() {
+            elements.loadingContainer.classList.add('show');
+        }
+
+        function hideLoading() {
+            elements.loadingContainer.classList.remove('show');
+        }
+
+        function shuffleArray(array) {
+            // Fisher-Yates (Knuth) shuffle algorithm
+            const newArray = [...array];
+            for (let i = newArray.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+            }
+            return newArray;
+        }
+
+        function startExam() {
+            showLoading();
+            
+            // Reset exam state
+            currentQuestionIndex = 0;
+            userAnswers = Array(questions.length).fill(null);
+            remainingTime = 125 * 60; // 125 minutes in seconds
+            
+            // Shuffle questions (optional)
+            questions = shuffleArray(questions);
+            
+            // Update UI
+            updateQuestion();
+            updateNavigation();
+            updateProgressBar();
+            startTimer();
+            createNavigationDots();
+            
+            showScreen('exam');
+            hideLoading();
+        }
+
+        function updateQuestion() {
+            const question = questions[currentQuestionIndex];
+            elements.questionContainer.innerHTML = `
+                <div class="question-number">Soal ${currentQuestionIndex + 1} dari ${questions.length}</div>
+                <div class="question-text">${question.text}</div>
+                <div class="options-container">
+                    ${question.options.map(option => `
+                        <div class="option-item ${userAnswers[currentQuestionIndex] === option.letter ? 'selected' : ''}" data-option="${option.letter}">
+                            <div class="option-letter">${option.letter}</div>
+                            <div class="option-text">${option.text}</div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+
+            // Add event listeners to options
+            document.querySelectorAll('.option-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    selectOption(item.dataset.option);
+                });
+            });
+
+            // Update progress text
+            elements.progressText.textContent = `Soal ${currentQuestionIndex + 1} dari ${questions.length}`;
+        }
+
+        function selectOption(option) {
+            userAnswers[currentQuestionIndex] = option;
+            
+            // Update selected state in UI
+            document.querySelectorAll('.option-item').forEach(item => {
+                item.classList.remove('selected');
+                if (item.dataset.option === option) {
+                    item.classList.add('selected');
+                }
+            });
+
+            // Update navigation dots
+            updateNavigationDot(currentQuestionIndex);
+        }
+
+        function navigateQuestion(direction) {
+            const newIndex = currentQuestionIndex + direction;
+            
+            if (newIndex >= 0 && newIndex < questions.length) {
+                currentQuestionIndex = newIndex;
+                updateQuestion();
+                updateNavigation();
+                updateProgressBar();
+                updateNavigationDots();
+            } else if (newIndex === questions.length) {
+                // Last question, ask if they want to finish
+                if (confirm('Apakah Anda yakin ingin menyelesaikan ujian?')) {
+                    finishExam();
+                }
+            }
+        }
+
+        function updateNavigation() {
+            elements.prevBtn.disabled = currentQuestionIndex === 0;
+            elements.nextBtn.textContent = currentQuestionIndex === questions.length - 1 ? 'Selesai' : 'Selanjutnya';
+        }
+
+        function updateProgressBar() {
+            const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
+            elements.progressBar.style.width = `${progress}%`;
+        }
+
+        function startTimer() {
+            // Clear any existing timer
+            if (timerInterval) {
+                clearInterval(timerInterval);
+            }
+
+            // Update timer display
+            updateTimerDisplay();
+
+            // Start interval
+            timerInterval = setInterval(() => {
+                remainingTime--;
+                updateTimerDisplay();
+
+                if (remainingTime <= 0) {
+                    clearInterval(timerInterval);
+                    finishExam();
+                    showToast('Waktu habis!', 'error');
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(remainingTime / 60);
+            const seconds = remainingTime % 60;
+            elements.timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+            // Change color when timer is low
+            if (remainingTime < 300) { // Less than 5 minutes
+                elements.timerDisplay.style.color = 'var(--danger-color)';
+                if (!elements.timerDisplay.classList.contains('blink')) {
+                    elements.timerDisplay.classList.add('blink');
+                }
+            }
+        }
+
+        function createNavigationDots() {
+            elements.navigationDots.innerHTML = '';
+            for (let i = 0; i < questions.length; i++) {
+                const dot = document.createElement('div');
+                dot.className = `dot ${i === currentQuestionIndex ? 'active' : ''} ${userAnswers[i] !== null ? 'answered' : ''}`;
+                dot.dataset.index = i;
+                dot.addEventListener('click', () => {
+                    currentQuestionIndex = parseInt(dot.dataset.index);
+                    updateQuestion();
+                    updateNavigation();
+                    updateProgressBar();
+                    updateNavigationDots();
+                });
+                elements.navigationDots.appendChild(dot);
+            }
+        }
+
+        function updateNavigationDots() {
+            document.querySelectorAll('.dot').forEach((dot, index) => {
+                dot.classList.remove('active');
+                if (index === currentQuestionIndex) {
+                    dot.classList.add('active');
+                }
+            });
+        }
+
+        function updateNavigationDot(index) {
+            const dot = document.querySelectorAll('.dot')[index];
+            if (dot) {
+                dot.classList.add('answered');
+            }
+        }
+
+        function finishExam() {
+            // Clear timer
+            clearInterval(timerInterval);
+            
+            // Calculate results
+            let correctCount = 0;
+            let incorrectCount = 0;
+            
+            for (let i = 0; i < questions.length; i++) {
+                if (userAnswers[i] === null) {
+                    incorrectCount++;
+                } else if (userAnswers[i] === questions[i].correctAnswer) {
+                    correctCount++;
+                } else {
+                    incorrectCount++;
+                }
+            }
+            
+            const totalScore = Math.round((correctCount / questions.length) * 100);
+            
+            // Update result UI
+            elements.scoreValue.textContent = totalScore;
+            elements.correctAnswers.textContent = correctCount;
+            elements.incorrectAnswers.textContent = incorrectCount;
+            
+            // Prepare review content
+            prepareReviewContent();
+            
+            // Show result screen
+            showScreen('result');
+        }
+
+        function toggleReview() {
+            const isVisible = elements.reviewContainer.style.display === 'block';
+            elements.reviewContainer.style.display = isVisible ? 'none' : 'block';
+            elements.reviewBtn.textContent = isVisible ? 'Lihat Review' : 'Sembunyikan Review';
+        }
+
+        function prepareReviewContent() {
+            elements.reviewContent.innerHTML = '';
+            
+            questions.forEach((question, index) => {
+                const userAnswer = userAnswers[index];
+                const isCorrect = userAnswer === question.correctAnswer;
+                
+                const reviewItem = document.createElement('div');
+                reviewItem.className = `review-item ${isCorrect ? 'correct' : 'incorrect'}`;
+                
+                reviewItem.innerHTML = `
+                    <div class="review-question">${index + 1}. ${question.text}</div>
+                    <div class="review-answer">
+                        <div class="review-user-answer">Jawaban Anda: <span>${userAnswer || 'Tidak dijawab'}</span></div>
+                        <div class="review-correct-answer">Jawaban Benar: <span>${question.correctAnswer}</span></div>
+                    </div>
+                    <div class="explanation-container">
+                        <div class="explanation-title">Penjelasan:</div>
+                        <div class="explanation-text">${question.explanation}</div>
+                    </div>
+                `;
+                
+                elements.reviewContent.appendChild(reviewItem);
+            });
+        }
+
+        function resetExam() {
+            // Clear timer
+            if (timerInterval) {
+                clearInterval(timerInterval);
+            }
+            
+            // Reset exam state
+            currentQuestionIndex = 0;
+            userAnswers = Array(questions.length).fill(null);
+            remainingTime = 125 * 60; // 125 minutes in seconds
+            
+            // Reset review display
+            elements.reviewContainer.style.display = 'none';
+            elements.reviewBtn.textContent = 'Lihat Review';
+        }
+
+        // Start the application
+        showScreen('welcome');
+    </script>
+</body>
+</html>
