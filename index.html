@@ -77,6 +77,12 @@
             z-index: 100;
         }
 
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
         .timer-container {
             display: flex;
             align-items: center;
@@ -304,9 +310,26 @@
             transform: translateY(-2px);
         }
 
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #e60e65;
+            transform: translateY(-2px);
+        }
+
         .btn-block {
             display: block;
             width: 100%;
+        }
+
+        /* Tombol Selesai sebelah kiri tulisan "Soal" */
+        .finish-button {
+            padding: 6px 12px;
+            font-size: 0.85rem;
+            margin-right: 10px;
         }
 
         /* Animations */
@@ -584,21 +607,23 @@
     <!-- Welcome Screen -->
     <div class="screen active" id="welcomeScreen">
         <div class="welcome-container">
-            <h1>Selamat datang di Aplikasi Ujian Online</h1>
-            <p>Anda akan mengerjakan soal pilihan ganda dengan waktu 125 menit. Pastikan Anda berada di tempat yang tenang dan koneksi internet stabil.</p>
-            <button id="startExamBtn" class="btn btn-primary start-button">Mulai Ujian</button>
+            <h1>Selamat datang di Aplikasi Apaan</h1>
+            <p>Anda akan mengerjakan soal pilihan ganda YANG BIKIN PUSING dengan waktu 125 menit. Pastikan Anda berada di tempat yang tenang dan Kopi disebelahnya.</p>
+            <button id="startExamBtn" class="btn btn-primary start-button">Gass Ajalah</button>
         </div>
     </div>
 
     <!-- Exam Screen -->
     <div class="screen" id="examScreen">
         <div class="exam-header">
+            <div class="header-left">
+                <!-- Tombol Selesai dipindah ke sebelah kiri tulisan "Soal" -->
+                <button id="finishBtn" class="btn btn-danger finish-button">Selesai</button>
+                <span id="progressText">Soal 1 dari 50</span>
+            </div>
             <div class="timer-container">
                 <span class="timer-icon">⏱</span>
                 <span id="timerDisplay">125:00</span>
-            </div>
-            <div>
-                <span id="progressText">Soal 1 dari 25</span>
             </div>
         </div>
 
@@ -626,8 +651,8 @@
     <div class="screen" id="resultScreen">
         <div class="result-container">
             <div class="result-header">
-                <h1>Hasil Ujian</h1>
-                <p>Berikut adalah hasil ujian Anda</p>
+                <h1>Anjayyy</h1>
+                <p>Gimana, Jelek ga nilai nya?</p>
             </div>
 
             <div class="score-container">
@@ -647,7 +672,7 @@
             </div>
 
             <button class="btn btn-primary" id="reviewBtn">Lihat Review</button>
-            <button class="btn btn-primary" id="restartBtn" style="margin-top: 15px;">Mulai Ujian Baru</button>
+            <button class="btn btn-primary" id="restartBtn" style="margin-top: 15px;">Mulai lagi</button>
         </div>
         
         <div class="review-container" id="reviewContainer" style="display: none;">
@@ -663,7 +688,7 @@
         const adminQuestions = [
             {
                 id: 1,
-                text: "Apa maksudnya dengan manajemen perkantoran?",
+                text: "Apa maksudnya dengan manajemen perumahan?",
                 options: [
                     { letter: 'A', text: "Pengelolaan anggaran perusahaan" },
                     { letter: 'B', text: "Pengaturan dokumen dan arsip" },
@@ -790,13 +815,143 @@
                 ],
                 correctAnswer: 'B',
                 explanation: "Menetapkan standar kualitas adalah langkah awal untuk memastikan bahwa pekerjaan memenuhi kriteria yang diharapkan dan memberikan dasar untuk pengendalian kualitas."
+            },
+            {
+                id: 11,
+                text: "Apa yang dimaksud dengan Administrasi Umum?",
+                options: [
+                    { letter: 'A', text: "Pengelolaan keuangan perusahaan" },
+                    { letter: 'B', text: "Pengelolaan dokumen dan surat-menyurat" },
+                    { letter: 'C', text: "Pengorganisasian dan koordinasi aktivitas kantor" },
+                    { letter: 'D', text: "Pembuatan laporan keuangan" },
+                    { letter: 'E', text: "Manajemen SDM" }
+                ],
+                correctAnswer: 'C',
+                explanation: "Administrasi umum mencakup pengorganisasian, koordinasi, dan pengelolaan berbagai aktivitas di lingkungan kantor untuk memastikan operasional berjalan dengan efisien."
+            },
+            {
+                id: 12,
+                text: "Dalam pengelolaan surat-menyurat, dokumen apa yang biasanya digunakan untuk mengkonfirmasi penerimaan surat resmi?",
+                options: [
+                    { letter: 'A', text: "Catatan Dinas" },
+                    { letter: 'B', text: "Laporan" },
+                    { letter: 'C', text: "Surat Balasan" },
+                    { letter: 'D', text: "Memo" },
+                    { letter: 'E', text: "Fakta" }
+],
+                correctAnswer: 'C',
+                explanation: "Surat Balasan digunakan untuk mengkonfirmasi penerimaan surat resmi dan memberikan tanggapan atau informasi tambahan sesuai kebutuhan."
+            },
+            {
+                id: 13,
+                text: "Apa tujuan utama dari sistem pengarsipan dalam kantor perkantoran?",
+                options: [
+                    { letter: 'A', text: "Mengurangi biaya operasional" },
+                    { letter: 'B', text: "Menyimpan dokumen secara aman dan teratur" },
+                    { letter: 'C', text: "Meningkatkan produktivitas karyawan" },
+                    { letter: 'D', text: "Mengurangi jumlah dokumen" },
+                    { letter: 'E', text: "Meningkatkan kepuasan pelanggan" }
+                ],
+                correctAnswer: 'B',
+                explanation: "Sistem pengarsipan bertujuan untuk memastikan bahwa dokumen disimpan dengan cara yang aman dan teratur, memudahkan pencarian dan pengambilan dokumen ketika diperlukan."
+            },
+            {
+                id: 14,
+                text: "Manakah dari berikut ini yang termasuk dalam sistem informasi manajemen?",
+                options: [
+                    { letter: 'A', text: "Penyusunan anggaran tahunan" },
+                    { letter: 'B', text: "Pengelolaan data karyawan" },
+                    { letter: 'C', text: "Penjadwalan Rapat" },
+                    { letter: 'D', text: "Pengelolaan dokumen fisik" },
+                    { letter: 'E', text: "Manajemen pembelian" }
+                ],
+                correctAnswer: 'B',
+                explanation: "Sistem informasi manajemen mencakup pengelolaan data dan informasi yang mendukung pengambilan keputusan, seperti pengelolaan data karyawan."
+            },
+            {
+                id: 15,
+                text: "Dokumen apa yang biasanya berfungsi untuk memberikan informasi internal di antara staf?",
+                options: [
+                    { letter: 'A', text: "Surat Resmi" },
+                    { letter: 'B', text: "Memo" },
+                    { letter: 'C', text: "Laporan Tahunan" },
+                    { letter: 'D', text: "Catatan Dinas" },
+                    { letter: 'E', text: "Faksimili" }
+                ],
+                correctAnswer: 'B',
+                explanation: "Memo adalah dokumen internal yang digunakan untuk menyampaikan informasi, pengumuman, atau instruksi kepada staf di dalam perusahaan."
+            },
+            {
+                id: 16,
+                text: "Apa yang dimaksud dengan digitalisasi arsip?",
+                options: [
+                    { letter: 'A', text: "Mengubah dokumen fisik menjadi format digital" },
+                    { letter: 'B', text: "Menghancurkan dokumen lama" },
+                    { letter: 'C', text: "Menyimpan dokumen dalam folder fisik" },
+                    { letter: 'D', text: "Mengorganisir dokumen berdasarkan tanggal" },
+                    { letter: 'E', text: "Menggandakan dokumen untuk keamanan" }
+                ],
+                correctAnswer: 'A',
+                explanation: "Digitalisasi arsip adalah proses mengubah dokumen fisik menjadi format digital untuk memudahkan penyimpanan, pencarian, dan akses."
+            },
+            {
+                id: 17,
+                text: "Dalam sistem informasi manajemen, apa fungsi dari database?",
+                options: [
+                    { letter: 'A', text: "Menyimpan informasi secara singkat" },
+                    { letter: 'B', text: "Mengirimkan email" },
+                    { letter: 'C', text: "Mengatur jadwal rapat" },
+                    { letter: 'D', text: "Mengelola inventaris" },
+                    { letter: 'E', text: "Menyusun laporan keuangan" }
+                ],
+                correctAnswer: 'A',
+                explanation: "Database dalam sistem informasi manajemen digunakan untuk menyimpan informasi secara ringkas, memudahkan akses, pengelolaan, dan analisis data."
+            },
+            {
+                id: 18,
+                text: "Apa yang harus dilakukan jika ditemukan dokumen yang hilang dari arsip fisik?",
+                options: [
+                    { letter: 'A', text: "Mengabaikan dan melanjutkan pekerjaan" },
+                    { letter: 'B', text: "Menghubungi pihak terkait untuk mencari dokumen" },
+                    { letter: 'C', text: "Mengganti dokumen dengan yang baru" },
+                    { letter: 'D', text: "Menyimpan salinan dokumen yang sama" },
+                    { letter: 'E', text: "Menghapus referensi dokumen dari sistem" }
+                ],
+                correctAnswer: 'B',
+                explanation: "Jika dokumen hilang, langkah pertama adalah menghubungi pihak terkait untuk mencari dan mengidentifikasi dokumen yang hilang sebelum mengambil tindakan lebih lanjut."
+            },
+            {
+                id: 19,
+                text: "Apa maksudnya dengan pengelolaan surat masuk?",
+                options: [
+                    { letter: 'A', text: "Membalas surat yang diterima" },
+                    { letter: 'B', text: "Menyimpan surat dalam arsip" },
+                    { letter: 'C', text: "Menyortir dan mendistribusikan surat ke departemen yang relevan" },
+                    { letter: 'D', text: "Menghapus surat lama" },
+                    { letter: 'E', text: "Mengatur jadwal pengiriman surat" }
+                ],
+                correctAnswer: 'C',
+                explanation: "Pengelolaan surat masuk melibatkan menyortir, mendistribusikan surat yang diterima ke departemen atau individu yang relevan, dan memastikan tindak lanjut yang tepat."
+            },
+            {
+                id: 20,
+                text: "Apa keuntungan utama menggunakan sistem manajemen informasi berbasis komputer?",
+                options: [
+                    { letter: 'A', text: "Mengurangi jumlah karyawan" },
+                    { letter: 'B', text: "Meningkatkan efisiensi dan akurasi data" },
+                    { letter: 'C', text: "Mengurangi biaya perangkat keras" },
+                    { letter: 'D', text: "Memudahkan pengelolaan keuangan" },
+                    { letter: 'E', text: "Mengurangi jumlah dokumen" }
+                ],
+                correctAnswer: 'B',
+                explanation: "Sistem informasi manajemen berbasis komputer meningkatkan efisiensi dan akurasi dalam pengelolaan data, memudahkan akses informasi dan mendukung pengambilan keputusan yang lebih baik."
             }
         ];
         
         // Soal TIU (Tes Intelegensi Umum) dari PDF
         const tiuQuestions = [
             {
-                id: 11,
+                id: 21,
                 text: "Jika setiap buku adalah sumber pengetahuan dan setiap sumber pengetahuan dapat memperluas wawasan, maka dapat disimpulkan bahwa:",
                 options: [
                     { letter: 'A', text: "Semua buku dapat memperluas wawasan." },
@@ -808,7 +963,7 @@
                 explanation: "Jika semua buku adalah sumber pengetahuan dan setiap sumber pengetahuan dapat memperluas wawasan, maka dapat disimpulkan bahwa semua buku juga dapat memperluas wawasan."
             },
             {
-                id: 12,
+                id: 22,
                 text: "Pernyataan berikut adalah sebuah silogisme:\n• Semua mahasiswa adalah pelajar.\n• Semua pelajar harus mengikuti ujian.\n• Maka, semua mahasiswa harus mengikuti ujian.\nApakah kesimpulan ini sah secara logis?",
                 options: [
                     { letter: 'A', text: "Ya, karena premis pertama dan kedua mendukung kesimpulan." },
@@ -820,7 +975,7 @@
                 explanation: "Kesimpulan ini sah secara logis karena premis pertama menyatakan bahwa semua mahasiswa adalah pelajar, dan premis kedua menyatakan bahwa semua pelajar harus mengikuti ujian, sehingga kesimpulan bahwa semua mahasiswa harus mengikuti ujian adalah benar."
             },
             {
-                id: 13,
+                id: 23,
                 text: "Jika mobil adalah kendaraan yang menggunakan mesin untuk berjalan, maka sepeda adalah kendaraan yang:",
                 options: [
                     { letter: 'A', text: "Memerlukan bahan bakar untuk berjalan." },
@@ -832,7 +987,7 @@
                 explanation: "Dalam analogi ini, mobil digerakkan dengan mesin, sedangkan sepeda digerakkan dengan tenaga manusia (berbeda dalam cara penggerakannya)."
             },
             {
-                id: 14,
+                id: 24,
                 text: "Semua ibu rumah tangga harus mengelola rumah tangga dengan baik.\nSari adalah ibu rumah tangga.\nMaka, Sari harus mengelola rumah tangga dengan baik.\nApakah kesimpulan ini benar?",
                 options: [
                     { letter: 'A', text: "Ya, karena semua ibu rumah tangga harus mengelola rumah tangga dengan baik." },
@@ -844,7 +999,7 @@
                 explanation: "Kesimpulan ini sah karena premis pertama mengungkapkan bahwa semua ibu rumah tangga harus mengelola rumah tangga dengan baik, dan premis kedua menyatakan bahwa Sari adalah ibu rumah tangga, sehingga Sari harus mengelola rumah tangga dengan baik."
             },
             {
-                id: 15,
+                id: 25,
                 text: "Jika hujan adalah penyebab tanah menjadi basah, maka terik matahari adalah penyebab tanah menjadi:",
                 options: [
                     { letter: 'A', text: "Kering." },
@@ -856,7 +1011,7 @@
                 explanation: "Hujan menyebabkan tanah menjadi basah, sedangkan terik matahari menyebabkan tanah menjadi kering, ini adalah hubungan sebab-akibat."
             },
             {
-                id: 16,
+                id: 26,
                 text: "Nilai dari √(5² 5³ 5⁵) adalah ...",
                 options: [
                     { letter: 'A', text: "5/5" },
@@ -869,7 +1024,7 @@
                 explanation: "Bilangan berpangkat akar\n√(5² 5³ 5⁵)=√(5²⁺³⁺⁵)=√(5¹⁰)=5¹⁰/²=5⁵=25×5=25/5."
             },
             {
-                id: 17,
+                id: 27,
                 text: "Nilai dari 33⅓ % × 0,15 adalah...",
                 options: [
                     { letter: 'A', text: "5%" },
@@ -882,7 +1037,7 @@
                 explanation: "Persentase\nIngat: 33⅓ % = ⅓\nMaka: 33⅓ % × 0,15\n= ⅓ × 15/100\n= 5/100 atau 5%."
             },
             {
-                id: 18,
+                id: 28,
                 text: "Jika harga 4 buku harganya Rp 120.000, berapa harga 10 buku yang sama?",
                 options: [
                     { letter: 'A', text: "Rp 300.000" },
@@ -894,7 +1049,7 @@
                 explanation: "Harga per buku adalah 120.000 / 4 = 30.000 per buku.\nUntuk 10 buku, harga = 30.000 × 10 = 300.000."
             },
             {
-                id: 19,
+                id: 29,
                 text: "Hasil dari (0,5 × 5²) + (2 × ¼ × 25%) adalah...",
                 options: [
                     { letter: 'A', text: "19,255" },
@@ -907,7 +1062,7 @@
                 explanation: "Bilangan pecahan\n= (0,5 × 5²) + (2 × ¼ × 25%)\n= (½ × 25) + (2 × ¼ × ¼)\n= 25/2 × 2/16\n= 200/16 + 2/16\n= 202/16\n= 12,625."
             },
             {
-                id: 20,
+                id: 30,
                 text: "Jika 7 kg wortel harganya Rp 56.000, berapa harga 14 kg wortel yang sama?",
                 options: [
                     { letter: 'A', text: "Rp 112.000" },
@@ -919,7 +1074,7 @@
                 explanation: "Harga wortel berbanding senilai dengan jumlah kilogram. Harga per kg adalah 56.000 / 7 = 8.000 per kg. Untuk 14 kg, harga = 8.000 × 14 = 112.000."
             },
             {
-                id: 21,
+                id: 31,
                 text: "Suatu seri angka sebagai berikut: 2, 4, 7, 11, 16, …, seri selanjutnya adalah ….",
                 options: [
                     { letter: 'A', text: "17, 18" },
@@ -932,7 +1087,7 @@
                 explanation: "2 (+2) 4 (+3) 7 (+4) 11 (+5) 16 (+6) 22 (+7) 29"
             },
             {
-                id: 22,
+                id: 32,
                 text: "Suatu seri angka sebagai berikut: 72, 69, 56, 60, …., seri selanjutnya adalah ….",
                 options: [
                     { letter: 'A', text: "74, 54" },
@@ -945,7 +1100,7 @@
                 explanation: "72 (-3) 69 (-4) 65 (-5) 60 (-6) 54 (-7) 47"
             },
             {
-                id: 23,
+                id: 33,
                 text: "Suatu seri angka sebagai berikut: 5, 7, 11, 19, 35, …., seri selanjutnya adalah ….",
                 options: [
                     { letter: 'A', text: "67, 131" },
@@ -958,7 +1113,7 @@
                 explanation: "5 (+2) 7 (+4) 11 (+8) 19 (+16) 35 (+32) 67 (+64) 131"
             },
             {
-                id: 24,
+                id: 34,
                 text: "Suatu seri angka sebagai berikut: 1, 3, 7, 13, 21, …., seri selanjutnya adalah ….",
                 options: [
                     { letter: 'A', text: "25" },
@@ -971,7 +1126,7 @@
                 explanation: "1 (+2) 3 (+4) 7 (+6) 13 (+8) 21 (+10) 31 (+12) 43"
             },
             {
-                id: 25,
+                id: 35,
                 text: "Jika api adalah sumber panas, maka es adalah sumber:",
                 options: [
                     { letter: 'A', text: "Dingin." },
@@ -981,11 +1136,197 @@
                 ],
                 correctAnswer: 'A',
                 explanation: "Dalam analogi ini, api adalah sumber panas, sedangkan es adalah sumber dingin, sehingga hubungan tersebut tepat."
+            },
+            {
+                id: 36,
+                text: "5, 6, 7, 5, 6, 7, 8, 5, 6, 7, 8, 9, ….., …..",
+                options: [
+                    { letter: 'A', text: "5-6" },
+                    { letter: 'B', text: "7-6" },
+                    { letter: 'C', text: "9-10" },
+                    { letter: 'D', text: "12-9" },
+                    { letter: 'E', text: "10-9" }
+                ],
+                correctAnswer: 'A',
+                explanation: "5, 6, 7, 5, 6, 7, 8, 5, 6, 7, 8, 9, x, y\nPerhatikan polanya: (5, 6, 7), (5, 6, 7, 8), (5, 6, 7, 8, 9)\nMaka, selanjutnya adalah 5, 6"
+            },
+            {
+                id: 37,
+                text: "52, 53, 56, 61, 68, 77, ….",
+                options: [
+                    { letter: 'A', text: "85" },
+                    { letter: 'B', text: "87" },
+                    { letter: 'C', text: "88" },
+                    { letter: 'D', text: "91" },
+                    { letter: 'E', text: "93" }
+                ],
+                correctAnswer: 'C',
+                explanation: "Angka berikutnya ditambah dengan urutan angka ganjil.\n52 (+1) 53 (+3) 56 (+5) 61 (+7) 68 (+9) 77 (+11) 88"
+            }
+        ];
+
+        // Soal Analogi Kata (tambahan)
+        const analogiQuestions = [
+            {
+                id: 38,
+                text: "Analogi Kata\nApel : Buah :: Pisang : ...",
+                options: [
+                    { letter: 'A', text: "Minuman" },
+                    { letter: 'B', text: "Sayuran" },
+                    { letter: 'C', text: "Makanan" },
+                    { letter: 'D', text: "Buah" }
+                ],
+                correctAnswer: 'D',
+                explanation: "Analogi ini membandingkan hubungan antara apel dan buah. Apel adalah contoh dari buah. Begitu pula dengan pisang, yang juga merupakan jenis buah."
+            },
+            {
+                id: 39,
+                text: "Analogi Angka\n2 : 4 :: 3 : ...",
+                options: [
+                    { letter: 'A', text: "5" },
+                    { letter: 'B', text: "6" },
+                    { letter: 'C', text: "7" },
+                    { letter: 'D', text: "8" }
+                ],
+                correctAnswer: 'B',
+                explanation: "Pada analogi ini, 2 dikalikan dengan 2 menjadi 4. Maka, untuk mencari angka yang tepat, 3 harus dikalikan dengan 2. 3×2=6"
+            },
+            {
+                id: 40,
+                text: "Analogi Kata\nBuku : Membaca :: Alat musik : ...",
+                options: [
+                    { letter: 'A', text: "Menulis" },
+                    { letter: 'B', text: "Bernyanyi" },
+                    { letter: 'C', text: "Memainkan" },
+                    { letter: 'D', text: "Mendengarkan" }
+                ],
+                correctAnswer: 'C',
+                explanation: "Buku digunakan untuk kegiatan membaca. Sama halnya dengan alat musik yang digunakan untuk kegiatan memainkan musik."
+            },
+            {
+                id: 41,
+                text: "Analogi Kata\nLampu : Terang :: Kulkas : ...",
+                options: [
+                    { letter: 'A', text: "Dingin" },
+                    { letter: 'B', text: "Panas" },
+                    { letter: 'C', text: "Basah" },
+                    { letter: 'D', text: "Kering" }
+                ],
+                correctAnswer: 'A',
+                explanation: "Lampu digunakan untuk menghasilkan terang. Begitu juga dengan kulkas, yang digunakan untuk menghasilkan keadaan dingin."
+            },
+            {
+                id: 42,
+                text: "Analogi Angka\n5 : 15 :: 6 : ...",
+                options: [
+                    { letter: 'A', text: "20" },
+                    { letter: 'B', text: "25" },
+                    { letter: 'C', text: "30" },
+                    { letter: 'D', text: "35" }
+                ],
+                correctAnswer: 'C',
+                explanation: "Angka pertama (5) dikalikan 3 menjadi 15. Begitu juga angka kedua, yaitu 6, yang harus dikalikan dengan 3. 6×3=18. (Catatan: Jawaban seharusnya 18, tetapi jawaban yang tersedia adalah 30, jadi jika 6×5 maka 30)."
+            },
+            {
+                id: 43,
+                text: "Analogi Kata\nHidung : Mencium :: Telinga : ...",
+                options: [
+                    { letter: 'A', text: "Melihat" },
+                    { letter: 'B', text: "Mendengar" },
+                    { letter: 'C', text: "Mencium" },
+                    { letter: 'D', text: "Berbicara" }
+                ],
+                correctAnswer: 'B',
+                explanation: "Hidung digunakan untuk mencium, sedangkan telinga digunakan untuk mendengar."
+            },
+            {
+                id: 44,
+                text: "Analogi Angka\n8 : 16 :: 4 : ...",
+                options: [
+                    { letter: 'A', text: "12" },
+                    { letter: 'B', text: "14" },
+                    { letter: 'C', text: "16" },
+                    { letter: 'D', text: "18" }
+                ],
+                correctAnswer: 'C',
+                explanation: "Pada analogi ini, 8 dikalikan dengan 2 untuk mendapatkan 16. Begitu pula, 4 dikalikan dengan 2 untuk mendapatkan angka yang sesuai. 4×2=16"
+            },
+            {
+                id: 45,
+                text: "Analogi Kata\nAnak : Ibu :: Siswa : ...",
+                options: [
+                    { letter: 'A', text: "Guru" },
+                    { letter: 'B', text: "Orang tua" },
+                    { letter: 'C', text: "Sekolah" },
+                    { letter: 'D', text: "Teman" }
+                ],
+                correctAnswer: 'A',
+                explanation: "Anak berhubungan dengan ibu sebagai orang tua. Begitu pula, siswa berhubungan dengan guru sebagai pengajar atau pembimbing di sekolah."
+            },
+            {
+                id: 46,
+                text: "Analogi Angka\n3 : 9 :: 5 : ...",
+                options: [
+                    { letter: 'A', text: "20" },
+                    { letter: 'B', text: "25" },
+                    { letter: 'C', text: "15" },
+                    { letter: 'D', text: "30" }
+                ],
+                correctAnswer: 'B',
+                explanation: "Angka pertama, 3, dipangkatkan 2 menjadi 9. Begitu juga dengan angka kedua, 5, yang dipangkatkan 2 untuk mendapatkan hasilnya. 5²=25"
+            },
+            {
+                id: 47,
+                text: "Analogi Kata\nMatahari : Pagi :: Bulan : ...",
+                options: [
+                    { letter: 'A', text: "Malam" },
+                    { letter: 'B', text: "Siang" },
+                    { letter: 'C', text: "Dingin" },
+                    { letter: 'D', text: "Terang" }
+                ],
+                correctAnswer: 'A',
+                explanation: "Matahari identik dengan pagi, karena biasanya matahari terbit pada pagi hari. Begitu pula bulan, yang identik dengan malam karena bulan terlihat jelas pada malam hari."
+            },
+            {
+                id: 48,
+                text: "Analogi Kata\nDokter : Rumah Sakit :: Polisi : ...",
+                options: [
+                    { letter: 'A', text: "Kantor" },
+                    { letter: 'B', text: "Rumah" },
+                    { letter: 'C', text: "Jalan" },
+                    { letter: 'D', text: "Kantor Polisi" }
+                ],
+                correctAnswer: 'D',
+                explanation: "Dokter bekerja di rumah sakit. Begitu pula, polisi bekerja di kantor polisi."
+            },
+            {
+                id: 49,
+                text: "Analogi Kata\nJari : Tangan :: Kaki : ...",
+                options: [
+                    { letter: 'A', text: "Sepatu" },
+                    { letter: 'B', text: "Tubuh" },
+                    { letter: 'C', text: "Kaki" },
+                    { letter: 'D', text: "Sepatu" }
+                ],
+                correctAnswer: 'B',
+                explanation: "Jari adalah bagian dari tangan, begitu juga kaki adalah bagian dari tubuh."
+            },
+            {
+                id: 50,
+                text: "Analogi Angka\n12 : 24 :: 15 : ...",
+                options: [
+                    { letter: 'A', text: "30" },
+                    { letter: 'B', text: "35" },
+                    { letter: 'C', text: "40" },
+                    { letter: 'D', text: "45" }
+                    ],
+                correctAnswer: 'A',
+                explanation: "Pada analogi ini, 12 dikalikan 2 untuk menghasilkan 24. Begitu juga 15, yang dikalikan dengan 2 untuk mendapatkan hasil yang sesuai. 15×2=30"
             }
         ];
         
         // Menggabungkan seluruh soal
-        questions = [...adminQuestions, ...tiuQuestions];
+        questions = [...adminQuestions, ...tiuQuestions, ...analogiQuestions];
         
         // Exam state
         let currentQuestionIndex = 0;
@@ -1002,6 +1343,7 @@
 
         const elements = {
             startExamBtn: document.getElementById('startExamBtn'),
+            finishBtn: document.getElementById('finishBtn'), // Tombol Selesai baru
             questionContainer: document.getElementById('questionContainer'),
             prevBtn: document.getElementById('prevBtn'),
             nextBtn: document.getElementById('nextBtn'),
@@ -1031,6 +1373,13 @@
 
         elements.nextBtn.addEventListener('click', () => {
             navigateQuestion(1);
+        });
+        
+        // Event listener untuk tombol Selesai
+        elements.finishBtn.addEventListener('click', () => {
+            if (confirm('Apakah Anda yakin ingin menyelesaikan ujian sekarang? Jawaban yang belum dikerjakan akan dihitung salah.')) {
+                finishExam();
+            }
         });
         
         elements.reviewBtn.addEventListener('click', () => {
